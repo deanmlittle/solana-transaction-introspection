@@ -1,0 +1,17 @@
+[package]
+name = "solana-transaction-introspection"
+version = "0.1.0"
+authors = ["Dean Little <@deanmlittle>"]
+description = "Deserialize signed transactions from Ed25519Instruction data"
+edition = "2021"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "solana_transaction_introspection"
+
+[dependencies]
+borsh = "^0.10.0"
+solana-program = "^2.0.0"
+solana-compact-u16 = "^0.1.0"
+solana-ed25519-instruction = "^0.1.0"
