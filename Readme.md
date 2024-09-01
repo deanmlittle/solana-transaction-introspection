@@ -1,4 +1,4 @@
-# Solana Signed Transaction Deserialization
+# Solana Transaction Introspection
 
 Deserialize signed Solana transactions into instructions, signers and blockhash from Ed25519Instruction data for use in payment channels and other L2 settlement scenarios.
 
