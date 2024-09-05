@@ -1,0 +1,19 @@
+[package]
+name = "typed-transaction-macros"
+version = "0.1.0"
+authors = ["Dean Little <@deanmlittle>"]
+description = "Derive accounts from AccountMetas"
+edition = "2021"
+license = "MIT"
+
+[lib]
+proc-macro = true
+name = "typed_transaction_macros"
+
+[dependencies]
+syn = "2.0.77"
+quote = "1.0.37"
+proc-macro2 = "1.0.86"
+sha2 = "0.10.8"
+borsh = "0.10.3"
+heck = "0.5.0"
