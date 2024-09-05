@@ -1,6 +1,6 @@
 [package]
 name = "solana-transaction-introspection"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Dean Little <@deanmlittle>"]
 description = "Deserialize signed transactions from Ed25519Instruction data"
 edition = "2021"

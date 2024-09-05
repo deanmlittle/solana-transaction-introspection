@@ -594,9 +594,9 @@ checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "cc"
-version = "1.1.15"
+version = "1.1.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "57b6a275aa2903740dc87da01c62040406b8812552e97129a63ea8850a17c6e6"
+checksum = "e9d013ecb737093c0e86b151a7b837993cf9ec6c502946cfb44bedc392421e0b"
 dependencies = [
  "jobserver",
  "libc",
@@ -1543,9 +1543,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.127"
+version = "1.0.128"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8043c06d9f82bd7271361ed64f415fe5e12a77fdb52e573e7f06a516dea329ad"
+checksum = "6ff5456707a1de34e7e37f2a6fd3d3f808c318259cbd01ab6377795054b483d8"
 dependencies = [
  "itoa",
  "memchr",
@@ -1878,14 +1878,14 @@ dependencies = [
 
 [[package]]
 name = "solana-transaction-introspection"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anchor-lang",
  "borsh 0.10.3",
  "fd_bs58",
  "solana-compact-u16",
  "solana-ed25519-instruction",
- "solana-program 2.0.8",
+ "solana-program 1.18.23",
  "solana-sdk",
  "typed-transaction-macros",
 ]
