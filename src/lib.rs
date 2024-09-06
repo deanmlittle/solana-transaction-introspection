@@ -5,6 +5,9 @@ use anchor_lang::prelude::*;
 #[cfg(feature = "anchor")]
 pub use typed_transaction::*;
 
+pub use typed_transaction_macros::{typed_instruction, FromSignedTransaction, TypedAccounts};
+
+
 #[cfg(not(feature = "anchor"))]
 use solana_program::{instruction::AccountMeta, pubkey::Pubkey};
 
