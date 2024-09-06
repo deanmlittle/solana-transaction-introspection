@@ -5,7 +5,6 @@ use syn::{parse, parse_macro_input, Data, DeriveInput, Expr, Fields, ItemStruct}
 use sha2::{Sha256, Digest};
 use heck::ToSnakeCase;
 
-
 #[proc_macro_derive(TypedAccounts, attributes(account))]
 pub fn from_account_metas_derive(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
