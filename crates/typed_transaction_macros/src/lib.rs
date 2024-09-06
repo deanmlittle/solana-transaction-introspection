@@ -302,6 +302,10 @@ pub fn from_signed_transaction_derive(input: TokenStream) -> TokenStream {
             }
         }
 
+        impl Discriminator for #name {
+            const DISCRIMINATOR: [u8; 8] = [0u8;8];
+        }
+
         impl TryFrom<SignedTransaction> for #name {
 
             type Error = anchor_lang::error::Error;
