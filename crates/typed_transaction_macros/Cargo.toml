@@ -1,6 +1,6 @@
 [package]
 name = "typed-transaction-macros"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Dean Little <@deanmlittle>"]
 description = "Typed transaction macros"
 edition = "2021"
