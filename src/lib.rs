@@ -5,8 +5,10 @@ use anchor_lang::prelude::*;
 #[cfg(feature = "anchor")]
 pub use typed_transaction::*;
 #[cfg(feature = "anchor")]
-pub use typed_transaction_macros::{typed_instruction, FromSignedTransaction, TypedAccounts};
-
+pub mod prelude {
+    pub use typed_transaction_macros::{typed_instruction, FromSignedTransaction, TypedAccounts};
+    pub use crate::{DeserializeWithDiscriminator, FromAccountMetas, FromSignedTransaction, InstructionOwner, SignedInstruction, SignedTransaction, TransactionHeader, TypedAccounts, TypedInstruction, VariableDiscriminator};
+}
 
 #[cfg(not(feature = "anchor"))]
 use solana_program::{instruction::AccountMeta, pubkey::Pubkey};
