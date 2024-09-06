@@ -1,5 +1,6 @@
 #[cfg(feature = "anchor")]
 pub mod typed_transaction;
+use solana_program::{ed25519_program, msg};
 #[cfg(feature = "anchor")]
 pub use typed_transaction::*;
 
@@ -239,13 +240,14 @@ impl SignedTransaction {
         // Get the current transaction index
         let mut current = (*data).len() - 2;
         let index = read_u16(&mut current, data)? + 1;
-    
+
         // Reset current to 0 to get the number of IXs
         current = 0;
         let num_instructions = read_u16(&mut current, data)?;
     
         // Make sure index is within number of instructions
         if index >= num_instructions {
+            msg!("Index {} is out of bounds", index);
             return Err(SanitizeError::IndexOutOfBounds);
         }
     
@@ -256,14 +258,17 @@ impl SignedTransaction {
         current = start as usize;
         let num_accounts = read_u16(&mut current, data)?;
         if num_accounts != 0 {
+            msg!("Incorrect number of accounts");
             return Err(SanitizeError::InvalidValue);
         }
 
         let program_id = read_pubkey(&mut current, data)?;
-        if program_id.ne(&instructions::ID) {
+        if program_id.ne(&ed25519_program::ID) {
+            msg!("Incorrect Program ID: {}", program_id.to_string());
             return Err(SanitizeError::InvalidValue);
         }
         let data_len = read_u16(&mut current, data)?;
+
         let data = read_slice(&mut current, data, data_len as usize)?;
         Ok(SignedTransaction::from_bytes(&data).map_err(|_| SanitizeError::InvalidValue)?)
     }
