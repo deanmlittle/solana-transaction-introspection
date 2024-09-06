@@ -338,6 +338,9 @@ pub fn from_signed_transaction_derive(input: TokenStream) -> TokenStream {
         impl AccountSerialize for #name {
         
         }
+
+        #[cfg(feature = "idl-build")]
+        impl anchor_lang::IdlBuild for #name {}
     };
 
     TokenStream::from(expanded)

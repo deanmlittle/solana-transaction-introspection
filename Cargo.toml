@@ -12,6 +12,7 @@ name = "solana_transaction_introspection"
 
 [features]
 default = ["solana-ed25519-instruction"]
+idl-build = ["anchor-lang/idl-build"]
 anchor = ["anchor-lang", "solana-ed25519-instruction/anchor"]
 
 [dependencies]
