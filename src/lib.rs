@@ -1,22 +1,48 @@
 #[cfg(feature = "anchor")]
 pub mod typed_transaction;
 #[cfg(feature = "anchor")]
-use anchor_lang::prelude::*;
-#[cfg(feature = "anchor")]
 pub use typed_transaction::*;
+
 #[cfg(feature = "anchor")]
 pub mod prelude {
+    // Anchor-specific imports
+    pub use anchor_lang::prelude::*;
+    pub use borsh::BorshDeserialize;
     pub use typed_transaction_macros::{typed_instruction, FromSignedTransaction, TypedAccounts};
-    pub use crate::{DeserializeWithDiscriminator, FromAccountMetas, FromSignedTransaction, InstructionOwner, SignedInstruction, SignedTransaction, TransactionHeader, TypedAccounts, TypedInstruction, VariableDiscriminator};
+    pub use anchor_lang::solana_program::{
+        sanitize::SanitizeError,
+        serialize_utils::{read_pubkey, read_slice, read_u16},
+        sysvar::instructions,
+    };
+    pub use crate::{
+        DeserializeWithDiscriminator, FromAccountMetas, InstructionOwner, SignedInstruction,
+        SignedTransaction, TransactionHeader, TypedInstruction, VariableDiscriminator,
+    };
 }
 
+// If the "anchor" feature is not enabled
+#[cfg(not(feature = "anchor"))]
+pub mod prelude {
+    pub use solana_program::{
+        sanitize::SanitizeError,
+        serialize_utils::{read_pubkey, read_slice, read_u16},
+        sysvar::instructions,
+    };
+}
+
+// Import the prelude (applies to both configurations)
+use prelude::*;
+
+// Additional imports specific to non-anchor builds
 #[cfg(not(feature = "anchor"))]
 use solana_program::{instruction::AccountMeta, pubkey::Pubkey};
 
+// Common imports
 use borsh::BorshDeserialize;
 use solana_compact_u16::CompactU16;
 use solana_ed25519_instruction::Ed25519Signature;
 use std::{collections::BTreeSet, io::Read};
+
 
 #[derive(Clone, Debug)]
 pub struct SignedTransaction {
@@ -204,6 +230,39 @@ impl SignedTransaction {
             recent_blockhash,
             instructions,
         })
+    }
+
+    pub fn try_deserialize_transaction(data: &mut &[u8]) -> core::result::Result<Self, SanitizeError> {    
+        // Get the current transaction index
+        let mut current = (*data).len() - 2;
+        let index = read_u16(&mut current, data)? + 1;
+    
+        // Reset current to 0 to get the number of IXs
+        current = 0;
+        let num_instructions = read_u16(&mut current, data)?;
+    
+        // Make sure index is within number of instructions
+        if index >= num_instructions {
+            return Err(SanitizeError::IndexOutOfBounds);
+        }
+    
+        // index into the instruction byte-offset table.
+        current += index as usize * 2;
+        let start = read_u16(&mut current, data)?;
+    
+        current = start as usize;
+        let num_accounts = read_u16(&mut current, data)?;
+        if num_accounts != 0 {
+            return Err(SanitizeError::InvalidValue);
+        }
+
+        let program_id = read_pubkey(&mut current, data)?;
+        if program_id.ne(&instructions::ID) {
+            return Err(SanitizeError::InvalidValue);
+        }
+        let data_len = read_u16(&mut current, data)?;
+        let data = read_slice(&mut current, data, data_len as usize)?;
+        Ok(SignedTransaction::from_bytes(&data).map_err(|_| SanitizeError::InvalidValue)?)
     }
 }
 

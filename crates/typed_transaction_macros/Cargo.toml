@@ -1,8 +1,8 @@
 [package]
 name = "typed-transaction-macros"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Dean Little <@deanmlittle>"]
-description = "Derive accounts from AccountMetas"
+description = "Typed transaction macros"
 edition = "2021"
 license = "MIT"
 

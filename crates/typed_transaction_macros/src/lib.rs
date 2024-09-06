@@ -20,7 +20,7 @@ pub fn from_account_metas_derive(input: TokenStream) -> TokenStream {
     };
 
     let mut field_checks = Vec::new();
-    let mut pubkey_fields = Vec::new();
+    let mut clones = Vec::new();
     let mut assignments = Vec::new();
 
     // Count the number of fields
@@ -79,12 +79,12 @@ pub fn from_account_metas_derive(input: TokenStream) -> TokenStream {
             });
         }
 
-        pubkey_fields.push(quote! {
-            pub #field_name: Pubkey
+        clones.push(quote! {
+            #field_name: self.#field_name.clone()
         });
 
         assignments.push(quote! {
-            #field_name: account_metas[#field_index].pubkey
+            #field_name: account_metas[#field_index].clone()
         });
     }
 
@@ -102,6 +102,14 @@ pub fn from_account_metas_derive(input: TokenStream) -> TokenStream {
                     #(#assignments),*  // Ensure no extra commas
                 })
             }
+        }
+
+        impl Clone for #name {
+            fn clone(&self) -> Self {
+                Self { 
+                    #(#clones),*
+                }
+            }   
         }
     };
 
@@ -209,7 +217,7 @@ pub fn typed_instruction(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     // Generate the output with `BorshDeserialize` derive and `VariableDiscriminator` trait implementation
     let expanded = quote! {
-        #[derive(BorshDeserialize, Debug)]
+        #[derive(BorshDeserialize, Debug, Clone)]
         #input
 
         // Implement the VariableDiscriminator trait
@@ -259,6 +267,8 @@ pub fn from_signed_transaction_derive(input: TokenStream) -> TokenStream {
 
     let mut assignments = Vec::new();
 
+    let mut clones = Vec::new();
+
     // Count the number of fields
     let mut field_index = 0usize;
 
@@ -274,11 +284,24 @@ pub fn from_signed_transaction_derive(input: TokenStream) -> TokenStream {
         assignments.push(quote! {
             #field_name: TypedInstruction::try_from(&value.instructions[#field_index])?
         });
+        clones.push(quote! {
+            #field_name: self.#field_name.clone()
+        });
         field_index += 1;
     }
 
     // Pass the literal value of `field_count` into the generated code
     let expanded = quote! {
+        impl Clone for #name {
+            fn clone(&self) -> Self {
+                Self { 
+                    header: self.header.clone(), 
+                    recent_blockhash: self.recent_blockhash.clone(),
+                    #(#clones),*
+                }
+            }
+        }
+
         impl TryFrom<SignedTransaction> for #name {
 
             type Error = anchor_lang::error::Error;
@@ -290,6 +313,26 @@ pub fn from_signed_transaction_derive(input: TokenStream) -> TokenStream {
                     #(#assignments),*
                 })
             }
+        }
+
+        impl Owner for #name {
+            fn owner() -> Pubkey {
+                anchor_lang::solana_program::sysvar::ID
+            }
+        }
+        
+        impl AccountDeserialize for #name {
+            fn try_deserialize(buf: &mut &[u8]) -> Result<Self> {
+                Self::try_deserialize_unchecked(buf)
+            }
+        
+            fn try_deserialize_unchecked(buf: &mut &[u8]) -> Result<Self> {
+                Self::try_from(SignedTransaction::try_deserialize_transaction(buf).map_err(|_| ProgramError::InvalidInstructionData)?)
+            }
+        }
+        
+        impl AccountSerialize for #name {
+        
         }
     };
 

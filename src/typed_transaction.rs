@@ -1,7 +1,4 @@
-use anchor_lang::prelude::*;
-use borsh::BorshDeserialize;
-
-use crate::{SignedInstruction, SignedTransaction};
+use crate::prelude::*;
 
 /// # FromAccountMetas
 ///
@@ -68,16 +65,16 @@ mod tests {
     #[derive(TypedAccounts, Debug)]
     pub struct FinalizeAccounts {
         #[account(mut, signer)]
-        pub signer: Pubkey,
+        pub signer: AccountMeta,
         #[account(mut)]
-        pub payee: Pubkey,
+        pub payee: AccountMeta,
         #[account(mut)]
-        pub channel: Pubkey,
+        pub channel: AccountMeta,
         #[account(mut)]
-        pub nonce: Pubkey,
-        pub system_program: Pubkey,
-        pub recent_blockhashes: Pubkey,
-        pub rent: Pubkey,
+        pub nonce: AccountMeta,
+        pub system_program: AccountMeta,
+        pub recent_blockhashes: AccountMeta,
+        pub rent: AccountMeta,
     }
 
     #[typed_instruction(owner = pubkey!("Gpu1L3Z6tHE6o1ksaBTASLNB4oUkoQe2qzQHqenK8bWd"))]
@@ -148,27 +145,6 @@ mod tests {
             0x00, 0x00, 0x00, 0x40, 0x42, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00,
         ];
         let transaction = SignedTransaction::from_bytes(&sigix).unwrap();
-        // assert_eq!(transaction.instructions.len(), 3);
-        // assert_eq!(
-        //     transaction.instructions[0].program_id,
-        //     pubkey!("ComputeBudget111111111111111111111111111111")
-        // );
-        // assert!(transaction.instructions[0].accounts.is_empty());
-        // assert_eq!(
-        //     transaction.instructions[1].program_id,
-        //     pubkey!("ComputeBudget111111111111111111111111111111")
-        // );
-        // assert!(transaction.instructions[1].accounts.is_empty());
-        // assert_eq!(
-        //     transaction.instructions[2].accounts[0].pubkey,
-        //     pubkey!("F8pqnWWBZKyTAZgxNNRGLVCkBqf6pbJvvPY38trMr7cF")
-        // );
-        // assert!(transaction.instructions[2].accounts[0].is_signer);
-        // assert_eq!(
-        //     transaction.instructions[2].program_id,
-        //     pubkey!("Gpu1L3Z6tHE6o1ksaBTASLNB4oUkoQe2qzQHqenK8bWd")
-        // );
-        // assert_eq!(transaction.instructions[2].accounts.len(), 7);
         let x = FinalizeTransaction::try_from(transaction).unwrap();
         println!("{:#?}", x);
     }

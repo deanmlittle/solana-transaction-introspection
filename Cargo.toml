@@ -1,6 +1,6 @@
 [package]
 name = "solana-transaction-introspection"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["Dean Little <@deanmlittle>"]
 description = "Deserialize signed transactions from Ed25519Instruction data"
 edition = "2021"
@@ -17,11 +17,9 @@ anchor = ["anchor-lang", "solana-ed25519-instruction/anchor"]
 [dependencies]
 borsh = "^0.10.0"
 fd_bs58 = "0.1.0"
-typed-transaction-macros = "0.1.0"
+# typed-transaction-macros = { path = "crates/typed_transaction_macros" }
+typed-transaction-macros = "0.2.0"
 solana-program = ">=1.17.0,<2.1.0"
 solana-compact-u16 = "^0.1.0"
 solana-ed25519-instruction = { optional = true, version = "^0.2.1" }
 anchor-lang = { version = "^0.30.1", optional = true}
-
-[dev-dependencies]
-solana-sdk = "2.0.8"
