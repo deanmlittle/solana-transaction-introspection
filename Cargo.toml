@@ -11,7 +11,7 @@ crate-type = ["cdylib", "lib"]
 name = "solana_transaction_introspection"
 
 [features]
-default = ["anchor", "solana-ed25519-instruction"]
+default = ["solana-ed25519-instruction"]
 anchor = ["anchor-lang", "solana-ed25519-instruction/anchor"]
 
 [dependencies]
