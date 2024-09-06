@@ -1,6 +1,5 @@
 #[cfg(feature = "anchor")]
 pub mod typed_transaction;
-use solana_program::{ed25519_program, msg};
 #[cfg(feature = "anchor")]
 pub use typed_transaction::*;
 
@@ -15,7 +14,8 @@ pub mod prelude {
         solana_program::{
             sanitize::SanitizeError,
             serialize_utils::{read_pubkey, read_slice, read_u16},
-            sysvar::instructions,
+            ed25519_program,
+            msg
         }
     };
     pub use crate::{
@@ -30,7 +30,8 @@ pub mod prelude {
     pub use solana_program::{
         sanitize::SanitizeError,
         serialize_utils::{read_pubkey, read_slice, read_u16},
-        sysvar::instructions,
+        ed25519_program, 
+        msg
     };
 }
 
