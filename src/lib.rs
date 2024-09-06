@@ -9,10 +9,13 @@ pub mod prelude {
     pub use anchor_lang::prelude::*;
     pub use borsh::BorshDeserialize;
     pub use typed_transaction_macros::{typed_instruction, FromSignedTransaction, TypedAccounts};
-    pub use anchor_lang::solana_program::{
-        sanitize::SanitizeError,
-        serialize_utils::{read_pubkey, read_slice, read_u16},
-        sysvar::instructions,
+    pub use anchor_lang::{
+        Discriminator,
+        solana_program::{
+            sanitize::SanitizeError,
+            serialize_utils::{read_pubkey, read_slice, read_u16},
+            sysvar::instructions,
+        }
     };
     pub use crate::{
         DeserializeWithDiscriminator, FromAccountMetas, InstructionOwner, SignedInstruction,
